@@ -39,7 +39,7 @@ class BananaBot < SlackRubyBot::Bot
 	command 'snapshot' do |client, data, match|
 		client.web_client.chat_postMessage(
 			channel: data.channel, text: 'Hold on fetching lastest snapshot info...', as_user: true)
-		
+
 		snapshot = fetchLatestSnapshots
 		client.web_client.chat_postMessage(
 			channel: data.channel,
@@ -58,6 +58,30 @@ class BananaBot < SlackRubyBot::Bot
 		)
 	end
 
+	command 'pulls swiftpm' do |client, data, match| 
+		json = JSON.parse(open("https://api.github.com/repos/apple/swift-package-manager/pulls?sort=updated&direction=desc").read)
+		count = json.count
+		json = json.first(5)
+		fields = []
+		json.each { |pull|
+			fields.push({:title => "#{pull["title"]}", :value => "by #{pull["user"]["login"]}", :short => false})
+		}
+
+		client.web_client.chat_postMessage(
+			channel: data.channel,
+			as_user: true,
+			attachments: [
+				{
+					"fallback": "swiftpm PR stats",
+					"color": "#36a64f",
+					"title": "#{count} pull requests open on swiftpm",
+					"title_link": "https://github.com/apple/swift-package-manager/pulls",
+					"text": "Showing top #{json.count >= 5 ? 5 : json.count}",
+					"fields": fields
+				}
+			]
+		)
+	end
 end
 
 BananaBot.run
