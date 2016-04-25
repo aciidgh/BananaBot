@@ -35,10 +35,14 @@ class BananaBot < SlackRubyBot::Bot
 	command 'ping' do |client, data, match|
 		client.say(text: 'pong', channel: data.channel)
 	end
-  
-  match /^say hi to (?<user>\w*)\?$/ do |client, data, match|
-     client.say(text: 'Hello @#{match[:user]}, hope you\'re doing good today!', channel: data.channel)
-   end
+ 
+	command 'good boy' do |client, data, match|
+                client.say(text: 'I know I am the best :sunglasses:', channel: data.channel)
+        end
+ 
+  	match /(.*)say hi to (?<user>\w*)$/ do |client, data, match|
+     		client.say(text: "Hello @#{match[:user]}, hope you\'re doing good today!", channel: data.channel)
+   	end
 
 	command 'snapshot' do |client, data, match|
 		client.web_client.chat_postMessage(

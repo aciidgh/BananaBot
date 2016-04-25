@@ -72,6 +72,3 @@ DEPENDENCIES
   nokogiri
   pry
   slack-ruby-bot
-
-BUNDLED WITH
-   1.11.2
